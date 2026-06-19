@@ -1,0 +1,40 @@
+name: Update alignment data
+
+on:
+  schedule:
+    - cron: "0 9 * * 1"  # Every Monday at 9am UTC
+    - cron: "0 9 * * 3"  # Every Wednesday at 9am UTC
+  workflow_dispatch:      # Also allows manual trigger from GitHub UI
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install requests pandas openpyxl
+
+      - name: Copy scrapers into working directory
+        run: |
+          cp eu_alignment_scraper.py .
+          cp eu_alignment_scraper_ga79.py .
+          cp statement_urls_ga79.txt . 2>/dev/null || true
+
+      - name: Run UN80 scraper
+        run: python eu_alignment_scraper.py --refresh-urls
+
+      - name: Commit updated data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scraped_results.csv scraped_results_ga79.csv
+          git diff --cached --quiet || git commit -m "Auto-update: $(date '+%d %b %Y')"
+          git push
