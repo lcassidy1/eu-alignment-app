@@ -16,7 +16,7 @@ CACHE_GA79 = Path(__file__).parent / "scraped_results_ga79.csv"
 SESSIONS = {
     "UN80 (Sep 2025 – present)":      ("2025-09-08", "2099-12-31"),
     "GA79 (Sep 2024 – Sep 2025)":     ("2024-09-10", "2025-09-09"),
-    "All sessions combined":           ("2000-01-01", "2099-12-31"),
+    "All sessions combined":           ("2024-09-10", "2099-12-31"),
     "Custom date range":               None,
 }
 
