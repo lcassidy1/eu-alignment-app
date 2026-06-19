@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: "0 9 * * 1"  # Every Monday at 9am UTC
     - cron: "0 9 * * 3"  # Every Wednesday at 9am UTC
+    - cron: "0 9 * * 5"  # Every Friday at 9am UTC
   workflow_dispatch:      # Also allows manual trigger from GitHub UI
 
 jobs:
