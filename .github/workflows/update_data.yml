@@ -11,6 +11,9 @@ jobs:
   scrape:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Check out repo
         uses: actions/checkout@v4
@@ -25,6 +28,7 @@ jobs:
 
       - name: Run UN80 scraper
         run: python eu_alignment_scraper.py --refresh-urls
+        continue-on-error: true
 
       - name: Commit updated data
         run: |
