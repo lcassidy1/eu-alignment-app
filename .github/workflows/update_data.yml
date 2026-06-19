@@ -23,12 +23,6 @@ jobs:
       - name: Install dependencies
         run: pip install requests pandas openpyxl
 
-      - name: Copy scrapers into working directory
-        run: |
-          cp eu_alignment_scraper.py .
-          cp eu_alignment_scraper_ga79.py .
-          cp statement_urls_ga79.txt . 2>/dev/null || true
-
       - name: Run UN80 scraper
         run: python eu_alignment_scraper.py --refresh-urls
 
