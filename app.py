@@ -4,6 +4,8 @@ Hosted on Streamlit Community Cloud.
 To update data: run scrapers locally, commit new CSVs to GitHub.
 """
 
+import datetime
+import os
 from pathlib import Path
 
 import pandas as pd
@@ -12,12 +14,11 @@ import streamlit as st
 CACHE_UN80 = Path(__file__).parent / "scraped_results.csv"
 CACHE_GA79 = Path(__file__).parent / "scraped_results_ga79.csv"
 
-# Session date boundaries
 SESSIONS = {
-    "UN80 (Sep 2025 – present)":      ("2025-09-08", "2099-12-31"),
-    "GA79 (Sep 2024 – Sep 2025)":     ("2024-09-10", "2025-09-09"),
-    "All sessions combined":           ("2024-09-10", "2099-12-31"),
-    "Custom date range":               None,
+    "UN80 (Sep 2025 – present)":  ("2025-09-08", "2099-12-31"),
+    "GA79 (Sep 2024 – Sep 2025)": ("2024-09-10", "2025-09-09"),
+    "All sessions combined":       ("2024-09-10", "2099-12-31"),
+    "Custom date range":           None,
 }
 
 COUNTRIES = [
@@ -31,6 +32,18 @@ st.set_page_config(page_title="EU Alignment Tracker", layout="wide")
 st.title("EU Delegation UN New York — Alignment Tracker")
 
 
+def get_last_updated():
+    times = [os.path.getmtime(c) for c in [CACHE_UN80, CACHE_GA79] if c.exists()]
+    if not times:
+        return "unknown"
+    return datetime.datetime.fromtimestamp(
+        max(times), tz=datetime.timezone.utc
+    ).strftime("%-d %B %Y")
+
+
+st.caption(f"Data last updated: **{get_last_updated()}** · Auto-refreshes Mon/Wed/Fri")
+
+
 @st.cache_data
 def load_data():
     dfs = []
@@ -40,7 +53,6 @@ def load_data():
             df["_date"] = pd.to_datetime(df["Date"], errors="coerce")
             dfs.append(df)
     combined = pd.concat(dfs, ignore_index=True)
-    # Drop exact duplicates (same URL appearing in both caches)
     combined = combined.drop_duplicates(subset=["URL"]).copy()
     combined = combined.dropna(subset=["_date"]).sort_values("_date", ascending=False)
     return combined
@@ -70,9 +82,6 @@ selected_country = st.sidebar.selectbox(
     "Filter by country",
     options=["— all —"] + COUNTRIES,
 )
-
-st.sidebar.divider()
-st.sidebar.caption("Data last updated by EU Delegation NY team. To refresh, run scrapers locally and push updated CSVs to GitHub.")
 
 # ── Filter ────────────────────────────────────────────────────────────────────
 mask = (df_all["_date"].dt.date >= start_date) & (df_all["_date"].dt.date <= end_date)
