@@ -42,6 +42,7 @@ def get_last_updated():
 
 
 st.caption(f"Data last updated: **{get_last_updated()}** · Auto-refreshes Mon/Wed/Fri")
+st.caption("Created by Lena Cassidy, CPI Trainee (June–July 2026)")
 
 
 @st.cache_data
