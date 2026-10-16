@@ -15,8 +15,8 @@ CACHE_UN80 = Path(__file__).parent / "scraped_results.csv"
 CACHE_GA79 = Path(__file__).parent / "scraped_results_ga79.csv"
 
 SESSIONS = {
-    "UNGA 81 (Sep 2026 – present)":  ("2026-09-09", "2099-12-31"),
-    "UNGA 80 (Sep 2025 – Sep 2026)": ("2025-09-08", "2026-09-08"),
+    "UNGA 81 (Sep 2026 – present)":  ("2026-09-08", "2099-12-31"),
+    "UNGA 80 (Sep 2025 – Sep 2026)": ("2025-09-08", "2026-09-07"),
     "UNGA 79 (Sep 2024 – Sep 2025)": ("2024-09-10", "2025-09-09"),
     "All sessions combined":          ("2024-09-10", "2099-12-31"),
     "Custom date range":              None,
